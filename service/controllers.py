@@ -23,9 +23,21 @@ class ClientsResource(Resource):
         if result.errors:
             raise errors.ResourceError(msg=f'Invalid POST data: {result.errors}.')
         validated_body = result.body
-        client = Client()
+        data = Client.get_derived_values(validated_body)
+        client = Client(**data)
         db.session.add(client)
         db.session.commit()
-        return utils.ok(result=ldap.serialize,
-                        msg="LDAP object created successfully.")
+        return utils.ok(result=client.serialize,
+                        msg="Client created successfully.")
+
+class ClientResource(Resource):
+    """
+    Work with a single OAuth client objects
+    """
+
+    def get(self, client_id):
+        client = Client.query.filter_by(client_id=client_id).first()
+        if not client:
+            raise errors.ResourceError(msg=f'No client object found with id {client_id}.')
+        return utils.ok(result=client.serialize, msg='Client object retrieved successfully.')
 
