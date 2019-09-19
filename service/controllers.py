@@ -27,8 +27,7 @@ class ClientsResource(Resource):
         client = Client(**data)
         db.session.add(client)
         db.session.commit()
-        return utils.ok(result=client.serialize,
-                        msg="Client created successfully.")
+        return utils.ok(result=client.serialize, msg="Client created successfully.")
 
 class ClientResource(Resource):
     """
