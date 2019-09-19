@@ -1,0 +1,38 @@
+---
+
+version: "3.5"
+
+networks:
+    authenticator:
+        driver: bridge
+
+volumes:
+    pgdata:
+
+services:
+    postgres:
+        image: postgres:9.4
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        networks:
+            - authenticator
+
+    migrations:
+        image: tapis/authenticator-migrations
+        volumes:
+            - ./config-local.json:/home/tapis/config.json
+        networks:
+            - authenticator
+
+    authenticator:
+        image: tapis/authenticator
+        ports:
+            - "5000:5000"
+        volumes:
+            - ./config-local.json:/home/tapis/config.json
+            - ./service.log:/home/tapis/service.log
+        networks:
+            - authenticator
+        depends_on:
+            - postgres
+

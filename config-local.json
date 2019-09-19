@@ -1,0 +1,6 @@
+{
+
+  "service_name": "authenticator",
+  "tenants": ["dev"],
+  "use_sk": false
+}
