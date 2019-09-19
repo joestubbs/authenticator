@@ -26,7 +26,7 @@ class Client(db.Model):
     client_id = db.Column(db.String(80), unique=True, nullable=False)
     client_key = db.Column(db.String(80), unique=False, nullable=False)
     tenant_id = db.Column(db.String(50), unique=False, nullable=False)
-    usernmame = db.Column(db.String(50), unique=False, nullable=False)
+    username = db.Column(db.String(50), unique=False, nullable=False)
     callback_url = db.Column(db.String(200), unique=False, nullable=True)
     create_time = db.Column(db.DateTime, nullable=False)
     last_update_time = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
@@ -81,6 +81,7 @@ class Client(db.Model):
             result['calback_url'] = getattr(data, 'calback_url')
         except AttributeError:
             result['calback_url'] = ''
+        return result
 
 
 class AuthorizationCode(db.Model):
