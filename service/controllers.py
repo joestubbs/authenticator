@@ -1,4 +1,4 @@
-from flask import request
+from flask import g, request
 from flask_restful import Resource
 from openapi_core.shortcuts import RequestValidator
 from openapi_core.wrappers.flask import FlaskOpenAPIRequest
@@ -14,7 +14,7 @@ class ClientsResource(Resource):
 
     # @swag_from("resources/ldaps/list.yml")
     def get(self):
-        clients = Client.query.all()
+        clients = Client.query.filter_by(tenant_id=g.tenant_id, username=g.username)
         return utils.ok(result=[cl.serialize for cl in clients], msg="Clients retrieved successfully.")
 
     def post(self):

@@ -41,7 +41,7 @@ class Client(db.Model):
         return {
             "client_id": self.client_id,
             "client_key": self.client_key,
-            "owner": self.usernmame,
+            "owner": self.username,
             "callback_url": self.callback_url,
             "create_time": self.create_time,
             "last_update_time": self.last_update_time
@@ -78,9 +78,9 @@ class Client(db.Model):
         except AttributeError:
             result['client_key'] = Client.generate_client_id()
         try:
-            result['calback_url'] = getattr(data, 'calback_url')
+            result['callback_url'] = getattr(data, 'callback_url')
         except AttributeError:
-            result['calback_url'] = ''
+            result['callback_url'] = ''
         return result
 
 
