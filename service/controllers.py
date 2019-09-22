@@ -7,6 +7,10 @@ from common import utils, errors
 
 from service.models import db, Client
 
+# get the logger instance -
+from common.logs import get_logger
+logger = get_logger(__name__)
+
 class ClientsResource(Resource):
     """
     Work with OAuth client objects
@@ -35,8 +39,19 @@ class ClientResource(Resource):
     """
 
     def get(self, client_id):
-        client = Client.query.filter_by(client_id=client_id).first()
+        client = Client.query.filter_by(tenant_id=g.tenant_id, client_id=client_id).first()
         if not client:
-            raise errors.ResourceError(msg=f'No client object found with id {client_id}.')
+            raise errors.ResourceError(msg=f'No client found with id {client_id}.')
+        if not client.username == g.username:
+            raise errors.PermissionsError("Not authorized for this client.")
         return utils.ok(result=client.serialize, msg='Client object retrieved successfully.')
+
+    def delete(self, client_id):
+        client = Client.query.filter_by(tenant_id=g.tenant_id, client_id=client_id).first()
+        if not client:
+            raise errors.ResourceError(msg=f'No client found with id {client_id}.')
+        if not client.username == g.username:
+            raise errors.PermissionsError("Not authorized for this client.")
+        db.session.delete(client)
+        db.session.commit()
 

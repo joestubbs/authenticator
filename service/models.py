@@ -105,3 +105,81 @@ class AuthorizationCode(db.Model):
             "code": self.code,
             "expiry_time": self.expiry_time
         }
+
+
+class LdapUser(object):
+    """
+    Class for representing an LDAP user entry.
+    """
+
+    # LDAP meta-data ------
+    # dn for the record;
+    dn = None
+    # we use inetOrgPerson for all LDAP user object
+    object_classes = [u'inetOrgPerson']
+
+    # attributes
+    # inetOrgPerson -----
+    given_name = None
+    last_name = None
+    full_name = None
+    email = None
+    phone = None
+    mobile_phone = None
+    create_time = None
+
+    # posixAccount -----
+    uid = None
+    username = None
+    password = None
+
+    def __init__(self, dn, givenName, sn, cn, mail, telephoneNumber, mobile,
+                 createTimestamp, uidNumber, uid, userPassword):
+        """
+        Create a LdapUser object from an LDAP row.
+        :param dn: 
+        :param givenName: 
+        :param sn: 
+        :param cn: 
+        :param mail: 
+        :param telephoneNumber: 
+        :param mobile: 
+        :param createTimestamp: 
+        :param uidNumber: 
+        :param uid: 
+        :param userPassword: 
+        """
+        self.dn = dn
+        self.given_name = givenName
+        self.last_name = sn
+        self.full_name = cn
+        self.email = mail
+        self.phone = telephoneNumber
+        self.mobile_phone = mobile
+        self.create_time = createTimestamp
+        self.uid = uidNumber
+        self.username = uid
+        self.password = userPassword
+
+
+class LdapOU(object):
+    """
+    Class for representing an LDAP organizational unit.
+    """
+
+    field_map = {
+        "ou": "ou"
+    }
+
+    # LDAP meta-data -----
+    dn = None
+    object_classes = [u'organizationalUnit']
+
+    # attributes
+    ou = None
+
+    def __str__(self):
+        return self.ou
+
+    def __unicode__(self):
+        return self.ou
